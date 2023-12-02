@@ -1,0 +1,58 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: smartBI
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  mail:
+    host: smtp.qq.com
+    port: 25
+    username: 2109236440@qq.com
+    password: ulndidydibgvbjhg # 授权码
+server:
+  port: 6848
+  servlet:
+    context-path: /api
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-not-delete-value: 0 # mybatis-plus 逻辑删除
+knife4j:
+  enable: true
+  openapi:
+    title: smartBI_backend
+    description: 后端接口文档
+    email: 2109236440@qq.com
+    concat: WLH
+    url: https://wlh55.github.io/
+    version: v4.0
+    license: Apache 2.0
+    license-url: https://wlh55.github.io/
+    terms-of-service-url: https://wlh55.github.io/
+    group:
+      dev:
+        group-name: 开发环境
+        api-rule: package
+        api-rule-resources:
+          - com.wlh.smartbi.controller
+      prod:
+        group-name: 线上环境
+        api-rule: package
+        api-rule-resources:
+          - com.wlh.smartbi.controller
+
+logging:
+  config: classpath:logback.xml # 日志配置文件
+
+template:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
+
+yuapi:
+  client:
+    access-key: t4hnmesrfaj7xdg61vi973n3d5gupj7v
+    secret-key: fajna4j1i5dvhb96kb55k7fg5f83xs2n

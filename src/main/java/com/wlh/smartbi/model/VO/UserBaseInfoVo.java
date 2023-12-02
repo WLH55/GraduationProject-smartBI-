@@ -1,0 +1,52 @@
+package com.wlh.smartbi.model.VO;
+
+import lombok.Data;
+
+import java.io.Serializable;
+
+/**
+ * @author WLH
+ * @className UserBaseInfoVo
+ * @date : 2023/05/04/ 16:20
+ **/
+@Data
+public class UserBaseInfoVo implements Serializable {
+
+    /**
+     * 用户id
+     */
+    private Long userId;
+
+    /**
+     * 昵称
+     */
+    private String userName;
+
+    /**
+     * 地址
+     */
+    private String address;
+
+    /**
+     * 头像地址
+     */
+    private String avatarUrl;
+
+    /**
+     * 性别1男0女
+     */
+    private Integer gender;
+
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 是否是管理员
+     */
+    private String userRole;
+
+
+    private static final long serialVersionUID = 1L;
+}
