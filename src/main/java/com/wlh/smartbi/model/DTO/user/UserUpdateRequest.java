@@ -45,6 +45,10 @@ public class UserUpdateRequest implements Serializable {
      * 邮箱
      */
     private String email;
+    /**
+     * 是否是管理员
+     */
+    private String userRole;
 
     /**
      * 出生日期

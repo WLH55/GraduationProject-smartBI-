@@ -43,6 +43,11 @@ public interface UserService extends IService<UserEntity> {
     UserEntity getLoginUser();
 
     /**
+     * 更新用户角色
+     */
+    BaseResponse updateUserRole(Long userId,String role);
+
+    /**
      * 是否是admin
      *
      * @param request 请求
@@ -57,6 +62,18 @@ public interface UserService extends IService<UserEntity> {
      * @return boolean
      */
     boolean isAdmin(UserEntity user);
+
+    /**
+     * 是否是admin
+     * @param userId
+     * @return
+     */
+    boolean isAdmin(Long userId);
+
+    /**
+     * 是否被禁用
+     */
+    boolean isBan(Long userId);
 
     /**
      * 通过邮箱注册

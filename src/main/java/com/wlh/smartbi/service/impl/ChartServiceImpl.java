@@ -89,7 +89,10 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, ChartEntity>
         PageRequest pageRequest = PageRequest.of(chartQueryRequest.getCurrent() - 1, chartQueryRequest.getPageSize(), Sort.by("creatTime").descending());
         Long userId = chartQueryRequest.getUserId();
         if (userId == null) {
-            userId = UserHolder.getUser().getUserId();
+//            userId = UserHolder.getUser().getUserId();
+            // 如果没有设置用户ID，获取所有用户的图表
+            Page<Chart> charts = chartRepository.findAll(pageRequest);
+            return excludeOldVersionAndBuildPage(charts.getContent(), pageRequest);
         }
         String name = chartQueryRequest.getName();
         // 查找符合搜索名称的chart
@@ -228,7 +231,8 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, ChartEntity>
         String name = chartQueryRequest.getName();
         String goal = chartQueryRequest.getGoal();
         String chartType = chartQueryRequest.getChartType();
-        Long userId = UserHolder.getUser().getUserId();
+//        Long userId = UserHolder.getUser().getUserId();
+        Long userId = chartQueryRequest.getUserId();
         String sortField = chartQueryRequest.getSortField();
         String sortOrder = chartQueryRequest.getSortOrder();
 

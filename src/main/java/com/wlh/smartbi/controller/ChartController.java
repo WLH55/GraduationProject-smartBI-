@@ -94,7 +94,15 @@ public class ChartController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         UserEntity loginUser = userService.getLoginUser();
-        chartQueryRequest.setUserId(loginUser.getUserId());
+        boolean isAdmin = userService.isAdmin(loginUser.getUserId());
+//        boolean isBan = userService.isBan(loginUser.getUserId());
+//        if(isBan){
+//            throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"你已被封号!请联系管理员2109236440@qq.com");
+//        }
+        if(!isAdmin){
+            chartQueryRequest.setUserId(loginUser.getUserId());
+        }
+//        chartQueryRequest.setUserId(loginUser.getUserId());
         long current = chartQueryRequest.getCurrent();
         long size = chartQueryRequest.getPageSize();
         // 限制爬虫
@@ -121,6 +129,10 @@ public class ChartController {
         ThrowUtils.throwIf(chartEntity.getChartData().length() > 1000, ErrorCode.SYSTEM_ERROR, "原始信息过长!");
         // 获取用户信息
         UserEntity user = userService.getLoginUser();
+        boolean isBan = userService.isBan(user.getUserId());
+        if(isBan){
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"你已被封号!请联系管理员2109236440@qq.com");
+        }
         redisLimiterManager.doRateLimit(RedisConstant.GEN_CHART_LIMIT_KEY + user.getUserId());
         chartEntity.setStatus(ChartStatusEnum.WAIT.getStatus());
         chartEntity.setExecMessage(ChartStatusEnum.WAIT.getMessage());
@@ -159,10 +171,15 @@ public class ChartController {
         String goal = chartRequest.getGoal();
         // 校验
         ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空!");
+        ThrowUtils.throwIf(StringUtils.isBlank(chartType),ErrorCode.PARAMS_ERROR,"图表类型为空!");
         ThrowUtils.throwIf(StringUtils.isNotBlank(name) && name.length() > 100, ErrorCode.PARAMS_ERROR, "名称过长!");
         ExcelUtils.checkExcelFile(multipartFile);
         // 获取用户信息
         UserEntity user = userService.getLoginUser();
+        boolean isBan = userService.isBan(user.getUserId());
+        if(isBan){
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"你已被封号!请联系管理员2109236440@qq.com");
+        }
         redisLimiterManager.doRateLimit(RedisConstant.GEN_CHART_LIMIT_KEY + user.getUserId());
         // 读取文件信息
         String csvData = ExcelUtils.excelToCsv(multipartFile);
@@ -359,7 +376,12 @@ public class ChartController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         UserEntity loginUser = userService.getLoginUser();
-        chartQueryRequest.setUserId(loginUser.getUserId());
+        long userid = loginUser.getUserId();
+        boolean isAdmin = userService.isAdmin(loginUser.getUserId());
+        if(!isAdmin){
+            chartQueryRequest.setUserId(userid);
+        }
+//        chartQueryRequest.setUserId(loginUser.getUserId());
         long current = chartQueryRequest.getCurrent();
         long size = chartQueryRequest.getPageSize();
         // 限制爬虫

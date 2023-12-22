@@ -96,6 +96,9 @@ public class UserController {
         String code = request.getCode();
         String codeKey = RedisConstant.VERIFY_CODE_KEY + email;
         String realCodeValue = stringRedisTemplate.opsForValue().get(codeKey);
+        if(realCodeValue == null){
+            return ResultUtil.error(ErrorCode.PARAMS_ERROR,"验证码过期");
+        }
         String[] split = realCodeValue.split("-");
         String verifyCode = split[1];
         if (!verifyCode.equals(code)) {
@@ -151,7 +154,7 @@ public class UserController {
     @GetMapping("/list")
     @ApiOperation("获取用户列表")
     @SysLog(value = "获取用户列表")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<List<UserVO>> getUserList(
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
             @RequestParam(value = "current", defaultValue = "1") int current) {
@@ -161,7 +164,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("通过ID删除用户")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUserById(@PathVariable("id") Long userId) {
         if (userId == null || userId < 0) {
             return ResultUtil.error(ErrorCode.PARAMS_ERROR);
@@ -199,6 +202,24 @@ public class UserController {
         userEntity.setUserId(user.getUserId());
         boolean b = userService.updateById(userEntity);
         ThrowUtils.throwIf(!b, ErrorCode.SYSTEM_ERROR, "更新用户信息失败!");
+        return ResultUtil.success("更新成功!");
+    }
+
+    /**
+     * 更新用户角色
+     * @return
+     */
+    @PostMapping("/update/role")
+    @ApiOperation("更新用户角色")
+    @SysLog("更新用户角色")
+    public BaseResponse updateUserRole(@RequestBody userRoleUpdateRequest request) {
+        if (request == null) {
+            return ResultUtil.error(ErrorCode.PARAMS_ERROR);
+        }
+        UserEntity user = userService.getById(request.getUserId());
+        user.setUserRole(request.getUserRole());
+        boolean b = userService.updateById(user);
+        ThrowUtils.throwIf(!b, ErrorCode.SYSTEM_ERROR, "更新用户角色失败!");
         return ResultUtil.success("更新成功!");
     }
 

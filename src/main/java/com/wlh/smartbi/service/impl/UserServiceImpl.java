@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wlh.smartbi.common.BaseResponse;
 import com.wlh.smartbi.common.ErrorCode;
 import com.wlh.smartbi.common.constant.UserConstant;
+import com.wlh.smartbi.common.constant.UserRole;
 import com.wlh.smartbi.common.exception.BusinessException;
 import com.wlh.smartbi.mapper.UserMapper;
 import com.wlh.smartbi.model.DO.UserEntity;
@@ -158,14 +159,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity>
         return getById(userId);
     }
 
+    /**
+     * 更新用户角色
+     *
+     * @param userId
+     */
+    @Override
+    public BaseResponse updateUserRole(Long userId, String userRole) {
+        UserEntity user = userMapper.selectById(userId);
+        user.setUserRole(userRole);
+        updateById(user);
+        return ResultUtil.success();
+    }
+
     @Override
     public boolean isAdmin(HttpServletRequest request) {
         UserDTO user = UserHolder.getUser();
         if (user.getUserRole() == null) {
             return false;
         }
-        return user.getUserRole().equals(UserConstant.ADMIN_ROLE);
+        return user.getUserRole().equals(UserRole.USER_ROLE_ADMIN);
     }
+
+
+    /**
+     * 是管理
+     * @param user 用户
+     * @return
+     */
 
     @Override
     public boolean isAdmin(UserEntity user) {
@@ -174,6 +195,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity>
         }
         return user.getUserRole().equals(UserConstant.ADMIN_ROLE);
     }
+
+    /**
+     * 是否是admin
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean isAdmin(Long userId) {
+        //从数据库中查出用户的角色
+        UserEntity user = userMapper.selectById(userId);
+        if(user == null){
+            return false;
+        }
+        return user.getUserRole().equals(UserRole.USER_ROLE_ADMIN);
+
+    }
+
+    /**
+     * 是否被禁用
+     *
+     * @param userId
+     */
+    @Override
+    public boolean isBan(Long userId) {
+        //从数据库中查出用户的角色
+        UserEntity user = userMapper.selectById(userId);
+        if(user == null){
+            return false;
+        }
+        return user.getUserRole().equals(UserRole.USER_ROLE_BAN);
+    }
+
 
     @Override
     public BaseResponse register(VerifyCodeRegisterRequest request) {

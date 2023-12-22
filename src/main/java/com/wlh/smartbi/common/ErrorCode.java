@@ -12,7 +12,7 @@ public enum ErrorCode {
     NULL_ERROR(400,"error","请求数据为空"),
     NOT_LOGIN(401,"error","未登录"),
     NO_AUTH_ERROR(403,"error","无权限"),
-    SYSTEM_ERROR(500,"error","服务器内部异常"),
+    SYSTEM_ERROR(500,"error","请登录~"),
     NOT_FOUND(404,"error","访问路径错误"),
     OPERATION_ERROR(50001, "error","操作失败"),
     NOT_FOUND_ERROR(40400, "error","请求数据不存在"),

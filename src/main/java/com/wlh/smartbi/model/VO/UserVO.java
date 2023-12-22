@@ -61,6 +61,12 @@ public class UserVO implements Serializable {
      */
     private Date birth;
 
+    /**
+     * 注册时间
+     */
+    private Date createTime;
+
+
     private static final long serialVersionUID = 1L;
 
 }

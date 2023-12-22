@@ -89,7 +89,6 @@ public class ExcelUtils {
             List<String> datalist = dataMap.values().stream().filter(ObjectUtils::isNotEmpty).collect(Collectors.toList());
             stringBuilder.append(StringUtils.join(datalist,",")).append("\n");
         }
-
         System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
 
